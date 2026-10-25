@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "camroll-check"
+version = "0.1.0"
+description = "Find screenshots with seed phrases, cards, IBANs, passports and API keys in your photo library. Local only."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["pillow>=10", "pytesseract>=0.3"]
+
+[project.optional-dependencies]
+mac = ["ocrmac>=1.0", "pillow-heif>=0.16"]
+heic = ["pillow-heif>=0.16"]
+dev = ["pytest"]
+
+[project.scripts]
+camroll-check = "camroll_check.scan:main"
+
+[tool.setuptools]
+packages = ["camroll_check"]
+
+[tool.setuptools.package-data]
+camroll_check = ["bip39_english.txt"]
