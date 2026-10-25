@@ -8,47 +8,47 @@ runs 100% on your machine. no uploads, no API keys. the report shows blurred thu
 example run:
 
 ```
-$ camroll-check \~/Pictures/iphone-export
-\[camroll-check] ocr: apple-vision, heic: True, images: 8412
-  found: seed\_phrase     high   IMG\_2291.PNG
-  found: payment\_card    high   IMG\_0457.PNG
-  found: recovery\_codes  high   IMG\_3310.PNG
-  found: iban            medium IMG\_1180.PNG
+$ camroll-check ~/Pictures/iphone-export
+[camroll-check] ocr: apple-vision, heic: True, images: 8412
+  found: seed_phrase     high   IMG_2291.PNG
+  found: payment_card    high   IMG_0457.PNG
+  found: recovery_codes  high   IMG_3310.PNG
+  found: iban            medium IMG_1180.PNG
   ...
-\[camroll-check] scanned 8412, flagged 23, unreadable 0
+[camroll-check] scanned 8412, flagged 23, unreadable 0
 report: camroll-report/report.html
 ```
 
 ## what it detects
 
-|kind|how|severity|
-|-|-|-|
-|seed\_phrase|12+ words in a row from the BIP39 wordlist|high|
-|payment\_card|13-19 digits that pass the Luhn check|high|
-|id\_document|passport / ID machine-readable zone (the `P<UKR...<<` lines)|high|
-|recovery\_codes|"backup codes" / "recovery codes" + a block of codes|high|
-|private\_key, api keys|PEM private keys, `sk-`, `sk-ant-`, `ghp\_`, `AKIA`, `xox` tokens|high|
-|iban|IBAN with a valid mod-97 checksum|medium|
-|password|`password: ...` / `пароль: ...` written next to a label|medium|
-|crypto\_address|BTC bech32 / ETH addresses|low|
+| kind | how | severity |
+|---|---|---|
+| seed_phrase | 12+ words in a row from the BIP39 wordlist | high |
+| payment_card | 13-19 digits that pass the Luhn check | high |
+| id_document | passport / ID machine-readable zone (the `P<UKR...<<` lines) | high |
+| recovery_codes | "backup codes" / "recovery codes" + a block of codes | high |
+| private_key, api keys | PEM private keys, `sk-`, `sk-ant-`, `ghp_`, `AKIA`, `xox` tokens | high |
+| iban | IBAN with a valid mod-97 checksum | medium |
+| password | `password: ...` / `пароль: ...` written next to a label | medium |
+| crypto_address | BTC bech32 / ETH addresses | low |
 
 checksums (Luhn, mod-97, BIP39) keep false positives low: a random 16-digit order number won't pass as a card.
 
 ## install
 
 ```
-git clone https://github.com/Cranefomo/camroll-check \&\& cd camroll-check
+git clone https://github.com/Cranefomo/camroll-check && cd camroll-check
 pip install -e .
 # Mac: use Apple Vision OCR (same engine as iPhone Live Text) + HEIC support
-pip install -e ".\[mac]"
+pip install -e ".[mac]"
 # Linux / Windows: needs tesseract installed (brew/apt/choco install tesseract)
 ```
 
 ## get your iPhone photos onto the computer
 
-* **Mac:** plug the iPhone in, open **Image Capture**, pick the phone, select all, Import to a folder.
-* **Windows:** plug in, allow access on the phone, open `This PC > Apple iPhone > Internal Storage > DCIM`, copy the folders.
-* **iCloud Photos:** on a Mac, Photos > Settings > iCloud > Download Originals, then export.
+- **Mac:** plug the iPhone in, open **Image Capture**, pick the phone, select all, Import to a folder.
+- **Windows:** plug in, allow access on the phone, open `This PC > Apple iPhone > Internal Storage > DCIM`, copy the folders.
+- **iCloud Photos:** on a Mac, Photos > Settings > iCloud > Download Originals, then export.
 
 then:
 
@@ -61,7 +61,7 @@ open camroll-report/report.html
 
 this repo ships a skill in `.claude/skills/camroll-check/`. open the folder in Claude Code and say:
 
-> check my iPhone export in \~/Pictures/iphone-export for screenshots with secrets
+> check my iPhone export in ~/Pictures/iphone-export for screenshots with secrets
 
 Claude runs the scan, reads only the masked summary, and walks you through cleaning up plus the iPhone privacy checklist in [CHECKLIST.md](CHECKLIST.md).
 
@@ -76,9 +76,8 @@ Claude runs the scan, reads only the masked summary, and walks you through clean
 
 ## limits
 
-* it only sees text. a photo of a card at an angle may not OCR cleanly
-* handwritten seed phrases usually won't be detected
-* tesseract uses English by default. for Cyrillic install the `ukr` language pack and run with `CAMROLL\_LANG=eng+ukr`. Apple Vision on a Mac doesn't need this
+- it only sees text. a photo of a card at an angle may not OCR cleanly
+- handwritten seed phrases usually won't be detected
+- tesseract uses English by default. for Cyrillic install the `ukr` language pack and run with `CAMROLL_LANG=eng+ukr`. Apple Vision on a Mac doesn't need this
 
 MIT license. BIP39 wordlist from [trezor/python-mnemonic](https://github.com/trezor/python-mnemonic) (MIT).
-
